@@ -23,6 +23,21 @@ limitations under the License.
 
 #include "am_bsp.h"  // NOLINT
 
+
+void ledBinary(tflite::ErrorReporter* error_reporter,const char* binary){
+  if(binary[0] == '1'){
+    am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_RED);
+  }
+  if(binary[1] == '1'){
+    am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_BLUE);
+  }
+  if(binary[2] == '1'){
+    am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_GREEN);
+  }
+  if(binary[3] == '1'){
+    am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_YELLOW);
+  }
+}
 // This implementation will light up the LEDs on the board in response to
 // different commands.
 void RespondToCommand(tflite::ErrorReporter* error_reporter,
@@ -38,35 +53,66 @@ void RespondToCommand(tflite::ErrorReporter* error_reporter,
     is_initialized = true;
   }
 
-  // Toggle the blue LED every time an inference is performed.
-  // am_devices_led_toggle(am_bsp_psLEDs, AM_BSP_LED_BLUE);
 
   // Turn on LEDs corresponding to the detection for the cycle
   am_devices_led_off(am_bsp_psLEDs, AM_BSP_LED_RED);
+  am_devices_led_off(am_bsp_psLEDs, AM_BSP_LED_BLUE);
   am_devices_led_off(am_bsp_psLEDs, AM_BSP_LED_YELLOW);
   am_devices_led_off(am_bsp_psLEDs, AM_BSP_LED_GREEN);
-  am_devices_led_off(am_bsp_psLEDs, AM_BSP_LED_BLUE);
   if (is_new_command) {
-    TF_LITE_REPORT_ERROR(error_reporter, "Heard -> %s (%d) @%dms", found_command,
+    TF_LITE_REPORT_ERROR(error_reporter, "Heard %s (%d) @%dms", found_command,
                          score, current_time);
-    if (score >= 250) {
-      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_YELLOW);
+    // one
+    if(found_command[0] =='o' && found_command[1] == 'n' && found_command[2] == 'e') {
+      ledBinary(error_reporter,"0001");
+    }
+    // on
+    else if (found_command[0] =='o' && found_command[1] =='n') {
       am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_RED);
-      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_GREEN);
       am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_BLUE);
-    }
-    if (score < 250 && score >= 230) {
-      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_YELLOW);
       am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_GREEN);
+      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_YELLOW);
+    }
+    // off
+    if (found_command[0] =='o' && found_command[1] =='f') {
+      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_RED);
       am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_BLUE);
-    }
-    if (score < 230 && score >= 210) {
-      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_YELLOW);
       am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_GREEN);
-    }
-    if (score < 210 && score >= 200) {
       am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_YELLOW);
     }
+    // two
+    if (found_command[0] == 't' && found_command[1] == 'w') {
+      ledBinary(error_reporter,"0001");
+    }
+    //three
+    if (found_command[0] == 't' && found_command[1] == 'h') {
+      ledBinary(error_reporter,"0011");
+    }
+    //four
+    if (found_command[0] == 'f' && found_command[1] == 'o') {
+      ledBinary(error_reporter,"0100");
+    }
+    //five 
+    if (found_command[0] == 'f' && found_command[1] == 'i') {
+      ledBinary(error_reporter,"0101");
+    }
+    //six
+    if (found_command[0] == 's' && found_command[1] == 'i') {
+      ledBinary(error_reporter,"0110");
+    }
+    //seven
+    if (found_command[0] == 's' && found_command[1] == 'e') {
+      ledBinary(error_reporter,"0111");
+    }
+    //eight
+    if (found_command[0] == 'e' && found_command[1] == 'i') {
+      ledBinary(error_reporter,"1000");
+    }
+    //nine
+    if (found_command[0] == 'n') {
+      ledBinary(error_reporter,"1000");
+    }
+    //zero -do nothing
   }
 }
 

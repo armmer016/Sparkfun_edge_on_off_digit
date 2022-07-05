@@ -126,6 +126,7 @@ TfLiteStatus RecognizeCommands::ProcessLatestResults(
   } else {
     time_since_last_top = current_time_ms - previous_top_label_time_;
   }
+  detection_threshold_ = 70; // since low accuracy mic, we have to lower the detection threshold
   if ((current_top_score > detection_threshold_) &&
       ((current_top_label != previous_top_label_) ||
        (time_since_last_top > suppression_ms_))) {
