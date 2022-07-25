@@ -59,30 +59,25 @@ void RespondToCommand(tflite::ErrorReporter* error_reporter,
   am_devices_led_off(am_bsp_psLEDs, AM_BSP_LED_BLUE);
   am_devices_led_off(am_bsp_psLEDs, AM_BSP_LED_YELLOW);
   am_devices_led_off(am_bsp_psLEDs, AM_BSP_LED_GREEN);
+
   if (is_new_command) {
     TF_LITE_REPORT_ERROR(error_reporter, "Heard %s (%d) @%dms", found_command,
-                         score, current_time);
+        score, current_time);
     // one
     if(found_command[0] =='o' && found_command[1] == 'n' && found_command[2] == 'e') {
-      ledBinary(error_reporter,"0001");
+      ledBinary(error_reporter,"0001"); 
     }
     // on
     else if (found_command[0] =='o' && found_command[1] =='n') {
-      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_RED);
-      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_BLUE);
-      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_GREEN);
-      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_YELLOW);
+      ledBinary(error_reporter,"1111");
     }
-    // off
-    if (found_command[0] =='o' && found_command[1] =='f') {
-      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_RED);
-      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_BLUE);
-      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_GREEN);
-      am_devices_led_on(am_bsp_psLEDs, AM_BSP_LED_YELLOW);
+    // zero & off
+    if (found_command[0] =='z' || (found_command[0] =='o' && found_command[1] =='f')) {
+      ledBinary(error_reporter,"0000");
     }
     // two
     if (found_command[0] == 't' && found_command[1] == 'w') {
-      ledBinary(error_reporter,"0001");
+      ledBinary(error_reporter,"0010");
     }
     //three
     if (found_command[0] == 't' && found_command[1] == 'h') {
@@ -110,9 +105,8 @@ void RespondToCommand(tflite::ErrorReporter* error_reporter,
     }
     //nine
     if (found_command[0] == 'n') {
-      ledBinary(error_reporter,"1000");
+      ledBinary(error_reporter,"1001");
     }
-    //zero -do nothing
   }
 }
 

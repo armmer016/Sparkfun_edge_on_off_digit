@@ -29,5 +29,5 @@ const char* kCategoryLabels[kCategoryCount] = {
     "six",
     "seven",
     "eight",
-    "nine",
+    "nine"
 };
